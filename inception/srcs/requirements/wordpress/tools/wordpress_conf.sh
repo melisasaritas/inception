@@ -1,20 +1,21 @@
 #!/bin/bash
 
-# Install WP-CLI
-if [ ! -f /usr/local/bin/wp ]; then
-    wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-    chmod +x wp-cli.phar
-    mv wp-cli.phar /usr/local/bin/wp
+
+# Install wordpress
+if [ ! -f /var/www/html/wp-config-sample.php ]; then
+    sed -i "s/listen = \/run\/php\/php8.2-fpm.sock/listen = 9000/" "/etc/php/8.2/fpm/pool.d/www.conf";
+    chown -R www-data:www-data /var/www/*;
+	chown -R 755 /var/www/*;
+	mkdir -p /run/php/;
+	touch /run/php/php8.2-fpm.pid;
+    cd /var/www/html
+    wp core download --allow-root
+    # Set up WordPress configuration file
+    php /var/www/wpconf.php
+    wp core install --url=$DOMAIN_NAME/ --title=$WP_TITLE --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL --skip-email --allow-root
+    wp user create $WP_USER_USER $WP_USER_EMAIL --user_pass=$WP_USER_PASSWORD --allow-root
+    wp plugin update --all --allow-root
 fi
-
-# Set up WordPress configuration file
-touch /var/www/html/wp-config.php
-php /var/www/wpconf.php
-
-# Run WP-CLI to complete the WordPress setup
-cd /var/www/html
-wp core install --url=${WP_URL} --title="${WP_TITLE}" --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${WP_ADMIN_EMAIL} --allow-root
-wp user create --user_login=${WP_USER_USER} --user_email=${WP_USER_EMAIL} --user_pass=${WP_USER_PASSWORD} --allow-root
 
 echo "WordPress installation and configuration complete!"
 

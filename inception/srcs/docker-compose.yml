@@ -7,14 +7,14 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /$HOME/msaritas/data/wordpress
+      device: /home/msaritas/data/wordpress
   db:
     driver: local
     name: db
     driver_opts:
       type: none
       o: bind
-      device: /$HOME/msaritas/data/mariadb
+      device: /home/msaritas/data/mariadb
 
 services:
   mariadb:
@@ -22,7 +22,8 @@ services:
     build: ./requirements/mariadb
     env_file:
       - .env
-    volumes:
+    ports:
+      - "3306:3306"
       - db:/var/lib/mysql
     networks:
       - mynetwork

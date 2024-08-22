@@ -23,12 +23,9 @@ max_connections = 100
 query_cache_size = 16M
 innodb_buffer_pool_size = 256M
 
-# Security
-bind-address    = 127.0.0.1
-skip-name-resolve
 
-# Additional settings
-sql_mode        = STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION
+character-set-server  = utf8mb4
+collation-server      = utf8mb4_general_ci
 
 [embedded]
 

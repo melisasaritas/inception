@@ -1,43 +1,35 @@
 server {
-    listen 80;
-    server_name msaritas.42.fr localhost;
-
-    location / {
-        return 301 https://$host$request_uri;
-    }
+	listen 80;
+	listen [::]:80;
+	server_name msaritas.42.fr localhost;
+	return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl;
+    listen [::]:443 ssl;
+
     server_name msaritas.42.fr localhost;
 
     ssl_certificate /etc/ssl/certs/nginx.crt;
     ssl_certificate_key /etc/ssl/private/nginx.key;
     ssl_protocols TLSv1.3;
-    
-    # Specify the default index files
+
     index index.php;
-    
-    # Specify the root directory where WordPress files are located
+
     root /var/www/html;
 
-    # Handle requests
     location / {
-        try_files $uri $uri/ /index.php?$args;
+        try_files $uri $uri/ /index.php$is_args$args;
     }
 
-    # Pass PHP requests to the PHP-FPM processor
     location ~ \.php$ {
         try_files $uri =404;
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_pass wordpress:9000;
         fastcgi_index index.php;
         include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         fastcgi_param PATH_INFO $fastcgi_path_info;
-    }
-
-    # Deny access to hidden files and directories
-    location ~ /\.ht {
-        deny all;
     }
 }

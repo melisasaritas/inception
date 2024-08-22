@@ -3,7 +3,7 @@
 FROM debian:11
 
 RUN apt-get update
-RUN apt-get install -y nginx openssl && rm -rf /var/lib/apt/lists/*
+RUN apt-get install -y nginx openssl curl && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 443
 
