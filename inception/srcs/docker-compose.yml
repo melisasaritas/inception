@@ -1,4 +1,10 @@
-version: '3.8'
+version: '3.5'
+
+networks:
+  mynetwork:
+    name: mynetwork
+    driver: bridge
+
 
 volumes:
   wp:
@@ -24,6 +30,7 @@ services:
       - .env
     ports:
       - "3306:3306"
+    volumes:
       - db:/var/lib/mysql
     networks:
       - mynetwork
@@ -34,6 +41,8 @@ services:
     build: ./requirements/wordpress
     env_file:
       - .env
+    ports:
+      - "9000:9000"
     volumes:
       - wp:/var/www/html
     depends_on:
@@ -57,9 +66,3 @@ services:
       - mynetwork
     restart: always
 
-    
-
-networks:
-  mynetwork:
-    name: mynetwork
-    driver: bridge
