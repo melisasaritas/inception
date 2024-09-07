@@ -4,11 +4,10 @@ RUN apt-get update && apt-get install -y mariadb-server
 
 EXPOSE 3306
 
-RUN sed -i "s/127.0.0.1/0.0.0.0/" /etc/mysql/mariadb.conf.d/50-server.cnf 
+COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 
-COPY ./tools/initial_db.sh /tmp/initial_db.sh
-RUN chmod +x /tmp/initial_db.sh
+COPY ./tools/init.sql /var/www/
 
-ENTRYPOINT ["bash", "/tmp/initial_db.sh"]
+RUN service mysql start && mysql < /var/www/init.sql
 
 CMD ["mysqld_safe"]
