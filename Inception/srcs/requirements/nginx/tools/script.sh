@@ -6,4 +6,4 @@ openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /etc/ssl/private/ngi
 echo "Nginx: ssl is set up!";
 fi
 
-exec "$@"
+nginx -g "daemon off;"

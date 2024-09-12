@@ -1,5 +1,0 @@
-CREATE DATABASE IF NOT EXISTS wordpress_db;
-CREATE USER  IF NOT EXISTS 'msaritas'@'%' IDENTIFIED BY '1234';
-GRANT ALL PRIVILEGES ON wordpress_db.* TO 'msaritas'@'%';
-FLUSH PRIVILEGES;
-ALTER USER 'root'@'localhost' IDENTIFIED BY 'root123';
