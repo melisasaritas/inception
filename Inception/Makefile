@@ -1,7 +1,3 @@
-# -f: --file
-# -q: --quiet
-# -a: --all
-# $$: escape $ for shell
 all:
 	@mkdir -p $(HOME)/data/wordpress
 	@mkdir -p $(HOME)/data/mariadb
