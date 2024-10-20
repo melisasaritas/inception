@@ -1,0 +1,58 @@
+version: '3.5'
+volumes:
+  wp:
+    driver: local
+    name: wp
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/msaritas/data/wordpress
+  db:
+    driver: local
+    name: db
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/msaritas/data/mariadb
+services:
+  mariadb:
+    container_name: mariadb
+    build: ./requirements/mariadb
+    env_file:
+      - .env
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - mynetwork
+    restart: always
+  wordpress:
+    container_name: wordpress
+    build: ./requirements/wordpress
+    env_file:
+      - .env
+    volumes:
+      - wp:/var/www/html
+    depends_on:
+      - mariadb
+    networks:
+      - mynetwork
+    restart: always
+  nginx:
+    container_name: nginx
+    build: ./requirements/nginx
+    env_file:
+      - .env
+    ports:
+      - "443:443"
+    volumes:
+      - wp:/var/www/html
+    depends_on:
+      - wordpress
+    networks:
+      - mynetwork
+    restart: always
+    
+networks:
+  mynetwork:
+    name: mynetwork
+    driver: bridge
